@@ -119,8 +119,8 @@ def main(args)
   runfiles_envkey, runfiles_envvalue = runfiles_envvar(runfiles)
   ENV[runfiles_envkey] = runfiles_envvalue if runfiles_envkey
 
-  ENV["GEM_PATH"] = File.join(runfiles, "{gem_path}") if "{gem_path}"
-  ENV["GEM_HOME"] = File.join(runfiles, "{gem_path}") if "{gem_path}"
+  ENV["GEM_PATH"] = File.join(runfiles, "{gem_path}") if "{gem_path}" != ""
+  ENV["GEM_HOME"] = File.join(runfiles, "{gem_path}") if "{gem_path}" != ""
 
   ruby_program = find_ruby_binary
 
@@ -145,6 +145,10 @@ def main(args)
     gem_program = find_gem_binary
     puts "Running pristine on {gems_to_pristine}"
     system(gem_program + " pristine {gems_to_pristine}")
+  end
+
+  if "{run_under}" != "" then
+    Dir.chdir("{run_under}")
   end
 
   exec(ruby_program, *rubyopt, main, *args)
